@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>預訂系統</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f7f7f7;
+        }
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button.admin {
+            background-color: #007bff;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>用戶登入</h1>
+        <input type="text" id="userId" placeholder="輸入用戶ID">
+        <input type="password" id="password" placeholder="輸入密碼" class="hidden">
+        <input type="text" id="username" placeholder="輸入用戶名稱" class="hidden">
+        <button id="loginBtn" onclick="login()">確認</button>
+
+        <hr>
+        <button class="admin" onclick="adminLogin()">管理員登入</button>
+    </div>
+
+    <script>
+        let users = {
+            "user1": { id: "user1", name: "用戶一", password: "1234" }
+        };
+        
+        function login() {
+            const userId = document.getElementById('userId').value;
+            const passwordInput = document.getElementById('password');
+            const usernameInput = document.getElementById('username');
+            const loginBtn = document.getElementById('loginBtn');
+
+            // 如果用户不存在，则显示注册表单
+            if (!users[userId]) {
+                alert('該用戶不存在，請先註冊！');
+                passwordInput.classList.remove('hidden');
+                usernameInput.classList.remove('hidden');
+                loginBtn.innerText = '註冊';
+
+                // 改变按钮功能为注册
+                loginBtn.onclick = function() {
+                    register(userId, usernameInput.value, passwordInput.value);
+                };
+            } else {
+                passwordInput.classList.remove('hidden');
+                loginBtn.innerText = '登入';
+
+                // 用户登录逻辑
+                loginBtn.onclick = function() {
+                    const password = passwordInput.value;
+                    if (password === users[userId].password) {
+                        alert('登入成功');
+                        window.location.href = 'reservation.html'; // 進入預訂頁面
+                    } else {
+                        alert('密碼錯誤！');
+                    }
+                };
+            }
+        }
+
+        function register(userId, username, password) {
+            if (!username || !password) {
+                alert('用戶名稱和密碼不能為空！');
+                return;
+            }
+            users[userId] = { id: userId, name: username, password: password };
+            alert('註冊成功，現在可以登入！');
+            document.getElementById('password').classList.add('hidden');
+            document.getElementById('username').classList.add('hidden');
+            document.getElementById('loginBtn').innerText = '確認';
+            document.getElementById('loginBtn').onclick = login;
+        }
+
+        function adminLogin() {
+            const adminPassword = prompt('請輸入管理員密碼:');
+            if (adminPassword === 'admin') {
+                alert('管理員登入成功');
+                window.location.href = 'admin.html'; // 進入管理員頁面
+            } else {
+                alert('密碼錯誤');
+            }
+        }
+    </script>
+</body>
+</html>
